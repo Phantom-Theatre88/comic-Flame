@@ -1,0 +1,73 @@
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
+  color: #1f1f1f;
+  background: #ececec;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
+header {
+  min-height: 58px; display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 8px 18px; background: #1e1e1e; color: white;
+}
+h1 { font-size: 18px; margin: 0; white-space: nowrap; }
+h1 span { font-size: 12px; color: #aaa; font-weight: 500; }
+.header-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+button, .file-label, select, input { font: inherit; }
+button, .file-label {
+  border: 1px solid #aaa; background: #fff; border-radius: 6px; padding: 7px 10px; cursor: pointer;
+}
+button:hover, .file-label:hover { background: #f5f5f5; }
+.file-label input { display: none; }
+.file-label.full { display: block; text-align: center; width: 100%; }
+main { flex: 1; min-height: 0; display: grid; grid-template-columns: 250px 1fr 290px; }
+.sidebar { background: #f8f8f8; overflow: auto; padding: 12px; border-color: #ccc; }
+.sidebar.left { border-right: 1px solid #ccc; }
+.sidebar.right { border-left: 1px solid #ccc; }
+.sidebar section { margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid #e3e3e3; }
+.sidebar section:last-child { border-bottom: 0; }
+h2 { font-size: 15px; margin: 0 0 10px; }
+h3 { font-size: 13px; margin: 14px 0 8px; }
+label { display: grid; gap: 5px; margin: 8px 0; font-size: 12px; }
+label.checkline { display: flex; align-items: center; gap: 7px; }
+input[type="text"], input[type="number"], select {
+  width: 100%; padding: 7px; border: 1px solid #bbb; border-radius: 5px; background: white;
+}
+input[type="range"] { width: 100%; }
+input[type="checkbox"] { width: auto; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.sidebar button { width: 100%; margin: 4px 0; }
+.danger { border-color: #b55; }
+.workspace-wrap { min-width: 0; min-height: 0; overflow: auto; background: #d8d8d8; }
+.workspace { min-width: 900px; min-height: 900px; display: grid; place-items: center; padding: 60px; }
+#canvas { background: transparent; overflow: visible; user-select: none; touch-action: none; }
+.paper { fill: white; stroke: #444; stroke-width: .5; }
+.bleed-guide { fill: none; stroke: #e08b8b; stroke-width: .35; stroke-dasharray: 2 2; pointer-events: none; }
+.safe-guide { fill: none; stroke: #78a4c7; stroke-width: .35; stroke-dasharray: 2 2; pointer-events: none; }
+.gutter-guide { stroke: #aaa; stroke-width: .4; stroke-dasharray: 2 2; pointer-events: none; }
+.grid-line { stroke: #d7d7d7; stroke-width: .18; pointer-events: none; }
+.reference-image { cursor: move; }
+.reference-image.locked { cursor: default; pointer-events: none; }
+.panel-shape { fill: rgba(20,20,20,.03); stroke: #111; stroke-width: 1.2; cursor: move; vector-effect: non-scaling-stroke; }
+.panel-shape.selected { stroke-width: 2; }
+.vertex-handle { fill: white; stroke: #111; stroke-width: 1; cursor: grab; vector-effect: non-scaling-stroke; }
+.vertex-handle:active { cursor: grabbing; }
+.edge-handle { fill: #111; stroke: white; stroke-width: .8; cursor: grab; vector-effect: non-scaling-stroke; }
+.edge-handle:active { cursor: grabbing; }
+.panel-label { font-size: 5px; pointer-events: none; text-anchor: middle; dominant-baseline: middle; }
+.snap-guide { stroke: #2d7dd2; stroke-width: .55; stroke-dasharray: 2 1; pointer-events: none; vector-effect: non-scaling-stroke; }
+.snap-guide.gap { stroke-dasharray: .7 .7; }
+.snap-label { font-size: 4px; fill: #2d7dd2; pointer-events: none; }
+.metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.metrics div { background: white; border: 1px solid #ddd; border-radius: 6px; padding: 6px; display: flex; justify-content: space-between; gap: 8px; }
+.metrics span { color: #666; font-size: 11px; }
+.metrics strong { font-size: 12px; }
+.vertex-list { display: grid; gap: 5px; }
+.vertex-row { display: grid; grid-template-columns: 28px 1fr 1fr; gap: 5px; align-items: center; }
+.vertex-row input { padding: 5px; }
+.muted, .hint { color: #666; font-size: 12px; line-height: 1.6; }
+.hint.compact { margin: 6px 0 0; line-height: 1.45; }
+footer { min-height: 28px; display: grid; place-items: center; background: #1e1e1e; color: #bbb; font-size: 11px; padding: 4px 8px; text-align: center; }
+@media (max-width: 1080px) {
+  main { grid-template-columns: 220px 1fr; }
+  .sidebar.right { grid-column: 1 / -1; border-left: 0; border-top: 1px solid #ccc; }
+}

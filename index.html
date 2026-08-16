@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manga Panel Designer v0.3</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Manga Panel Designer <span>v0.3</span></h1>
+    <div class="header-actions">
+      <button id="saveLocalBtn">ローカル保存</button>
+      <button id="loadLocalBtn">ローカル読込</button>
+      <button id="exportJsonBtn">JSON書出</button>
+      <label class="file-label">JSON読込<input id="importJsonInput" type="file" accept="application/json,.json" /></label>
+      <button id="exportSvgBtn">SVG書出</button>
+    </div>
+  </header>
+
+  <main>
+    <aside class="sidebar left">
+      <section>
+        <h2>用紙</h2>
+        <label>サイズ
+          <select id="paperSize">
+            <option value="B5">B5</option>
+            <option value="A4">A4</option>
+            <option value="B4">B4</option>
+            <option value="A3">A3</option>
+            <option value="B6">B6</option>
+          </select>
+        </label>
+        <label>向き
+          <select id="orientation">
+            <option value="portrait">縦</option>
+            <option value="landscape">横</option>
+          </select>
+        </label>
+        <label>ページ
+          <select id="spreadMode">
+            <option value="single">単ページ</option>
+            <option value="spread">見開き</option>
+          </select>
+        </label>
+        <div class="two-col">
+          <label>内枠 mm<input id="safeMargin" type="number" value="12" min="0" step="0.1" /></label>
+          <label>塗足 mm<input id="bleed" type="number" value="3" min="0" step="0.1" /></label>
+        </div>
+      </section>
+
+      <section>
+        <h2>コマ作成</h2>
+        <button id="addRectBtn">四角コマ</button>
+        <button id="addTrapBtn">台形コマ</button>
+        <button id="addSlantBtn">斜め枠コマ</button>
+        <button id="duplicateBtn">複製</button>
+        <button id="deleteBtn" class="danger">削除</button>
+      </section>
+
+      <section>
+        <h2>スマートスナップ</h2>
+        <label class="checkline"><input id="snapToggle" type="checkbox" checked /> 吸着を有効</label>
+        <div class="two-col">
+          <label>横コマ間 mm<input id="gapX" type="number" value="4" min="0" step="0.1" /></label>
+          <label>縦コマ間 mm<input id="gapY" type="number" value="4" min="0" step="0.1" /></label>
+        </div>
+        <label>吸着距離 mm<input id="snapThreshold" type="number" value="3" min="0.1" step="0.1" /></label>
+        <p class="hint compact">用紙端・内枠・中央線・他のコマ・標準コマ間・0mm接触へ吸着。Alt/Optionを押しながらドラッグすると一時的に無視できます。</p>
+      </section>
+
+      <section>
+        <h2>表示</h2>
+        <label class="checkline"><input id="showSafe" type="checkbox" checked /> 内枠</label>
+        <label class="checkline"><input id="showBleed" type="checkbox" checked /> 塗り足し</label>
+        <label class="checkline"><input id="showGrid" type="checkbox" /> 5mmグリッド（表示のみ）</label>
+        <label class="checkline"><input id="showSnapGuides" type="checkbox" checked /> 吸着ガイド</label>
+      </section>
+
+      <section>
+        <h2>参照画像レイヤー</h2>
+        <label class="file-label full">画像を読み込む<input id="referenceImageInput" type="file" accept="image/*" /></label>
+        <div id="referenceControls" hidden>
+          <label class="checkline"><input id="referenceVisible" type="checkbox" checked /> 表示</label>
+          <label class="checkline"><input id="referenceLocked" type="checkbox" checked /> ロック</label>
+          <label>透明度 <span id="referenceOpacityValue">35%</span>
+            <input id="referenceOpacity" type="range" min="0" max="100" value="35" />
+          </label>
+          <div class="two-col">
+            <label>X mm<input id="referenceX" type="number" step="0.1" /></label>
+            <label>Y mm<input id="referenceY" type="number" step="0.1" /></label>
+          </div>
+          <div class="two-col">
+            <label>幅 mm<input id="referenceW" type="number" min="1" step="0.1" /></label>
+            <label>高さ mm<input id="referenceH" type="number" min="1" step="0.1" /></label>
+          </div>
+          <button id="fitReferenceBtn">用紙に合わせる</button>
+          <button id="removeReferenceBtn" class="danger">参照画像を削除</button>
+          <p class="hint compact">ロックOFF時は画像自体をドラッグして位置調整できます。</p>
+        </div>
+      </section>
+    </aside>
+
+    <section class="workspace-wrap">
+      <div id="workspace" class="workspace">
+        <svg id="canvas" xmlns="http://www.w3.org/2000/svg" aria-label="マンガコマ割りキャンバス"></svg>
+      </div>
+    </section>
+
+    <aside class="sidebar right">
+      <section>
+        <h2>選択コマ</h2>
+        <div id="emptySelection" class="muted">コマを選択してください</div>
+        <div id="selectionPanel" hidden>
+          <label>名前<input id="panelName" type="text" /></label>
+          <div class="metrics">
+            <div><span>X</span><strong id="metricX">-</strong></div>
+            <div><span>Y</span><strong id="metricY">-</strong></div>
+            <div><span>幅</span><strong id="metricW">-</strong></div>
+            <div><span>高さ</span><strong id="metricH">-</strong></div>
+            <div><span>比率</span><strong id="metricRatio">-</strong></div>
+            <div><span>面積率</span><strong id="metricArea">-</strong></div>
+          </div>
+          <p class="hint">○＝頂点1点。■＝辺の両端2点を同時移動。斜め・台形・不定形も同じ8点操作です。</p>
+          <h3>頂点座標 mm</h3>
+          <div id="vertexList" class="vertex-list"></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>プロジェクト</h2>
+        <label>タイトル<input id="projectTitle" type="text" value="新規コマ割り" /></label>
+        <p class="hint">保存内容：用紙設定・スマートスナップ設定・全コマ形状・参照画像レイヤー。</p>
+      </section>
+
+      <section>
+        <h2>操作メモ</h2>
+        <p class="hint">グリッドは表示だけです。コマは0.1mm単位で自由に置けます。吸着は候補位置へ近づいた時だけ働きます。</p>
+      </section>
+    </aside>
+  </main>
+
+  <footer>v0.3 — 8点ハンドル / スマートスナップ / コマ間0mm・標準余白 / 参照画像レイヤー / SVG・JSON保存</footer>
+  <script src="app.js"></script>
+</body>
+</html>
