@@ -3,18 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Manga Panel Designer v0.3</title>
+  <title>Manga Panel Designer v1.0</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <h1>Manga Panel Designer <span>v0.3</span></h1>
+    <div class="brand">
+      <h1>Manga Panel Designer <span>v1.0</span></h1>
+      <span id="saveStatus" class="save-status">未保存</span>
+    </div>
     <div class="header-actions">
-      <button id="saveLocalBtn">ローカル保存</button>
-      <button id="loadLocalBtn">ローカル読込</button>
+      <button id="saveLocalBtn">プロジェクト保存</button>
+      <button id="loadLocalBtn">保存を読込</button>
       <button id="exportJsonBtn">JSON書出</button>
       <label class="file-label">JSON読込<input id="importJsonInput" type="file" accept="application/json,.json" /></label>
       <button id="exportSvgBtn">SVG書出</button>
+      <button id="exportPngBtn">PNG書出</button>
+      <button id="exportJpgBtn">JPG書出</button>
     </div>
   </header>
 
@@ -79,7 +84,7 @@
 
       <section>
         <h2>参照画像レイヤー</h2>
-        <label class="file-label full">画像を読み込む<input id="referenceImageInput" type="file" accept="image/*" /></label>
+        <label class="file-label full">参照画像を読み込む<input id="referenceImageInput" type="file" accept="image/*" /></label>
         <div id="referenceControls" hidden>
           <label class="checkline"><input id="referenceVisible" type="checkbox" checked /> 表示</label>
           <label class="checkline"><input id="referenceLocked" type="checkbox" checked /> ロック</label>
@@ -109,6 +114,20 @@
 
     <aside class="sidebar right">
       <section>
+        <h2>ページ</h2>
+        <label>現在のページ
+          <select id="pageSelect"></select>
+        </label>
+        <label>ページ名<input id="pageName" type="text" value="P1" /></label>
+        <div class="page-actions">
+          <button id="addPageBtn">＋ 新規</button>
+          <button id="duplicatePageBtn">複製</button>
+          <button id="deletePageBtn" class="danger">削除</button>
+        </div>
+        <p class="hint compact">各ページはコマ割り・配置画像・画像位置まで独立して保存されます。</p>
+      </section>
+
+      <section>
         <h2>選択コマ</h2>
         <div id="emptySelection" class="muted">コマを選択してください</div>
         <div id="selectionPanel" hidden>
@@ -121,6 +140,23 @@
             <div><span>比率</span><strong id="metricRatio">-</strong></div>
             <div><span>面積率</span><strong id="metricArea">-</strong></div>
           </div>
+
+          <h3>コマ画像</h3>
+          <label class="file-label full">JPG / PNGを配置<input id="panelImageInput" type="file" accept="image/jpeg,image/png,.jpg,.jpeg,.png" /></label>
+          <div id="panelImageControls" hidden>
+            <label class="checkline"><input id="imageEditMode" type="checkbox" /> キャンバス上で画像を移動</label>
+            <label>拡大率 <span id="imageScaleValue">100%</span>
+              <input id="imageScale" type="range" min="50" max="400" value="100" step="1" />
+            </label>
+            <div class="two-col">
+              <label>画像X mm<input id="imageOffsetX" type="number" step="0.1" value="0" /></label>
+              <label>画像Y mm<input id="imageOffsetY" type="number" step="0.1" value="0" /></label>
+            </div>
+            <button id="resetPanelImageBtn">中央フィット</button>
+            <button id="removePanelImageBtn" class="danger">コマ画像を削除</button>
+          </div>
+          <p class="hint compact">画像はコマ形状で自動的に切り抜かれます。画像ファイルをキャンバス上のコマへ直接ドロップすることもできます。</p>
+
           <p class="hint">○＝頂点1点。■＝辺の両端2点を同時移動。斜め・台形・不定形も同じ8点操作です。</p>
           <h3>頂点座標 mm</h3>
           <div id="vertexList" class="vertex-list"></div>
@@ -130,17 +166,17 @@
       <section>
         <h2>プロジェクト</h2>
         <label>タイトル<input id="projectTitle" type="text" value="新規コマ割り" /></label>
-        <p class="hint">保存内容：用紙設定・スマートスナップ設定・全コマ形状・参照画像レイヤー。</p>
+        <p class="hint">保存内容：複数ページ・用紙設定・全コマ形状・各コマのJPG/PNG・画像位置/拡大率・参照画像。IndexedDBへ画像データごと保存します。</p>
       </section>
 
       <section>
         <h2>操作メモ</h2>
-        <p class="hint">グリッドは表示だけです。コマは0.1mm単位で自由に置けます。吸着は候補位置へ近づいた時だけ働きます。</p>
+        <p class="hint">通常ドラッグ＝コマ移動。「キャンバス上で画像を移動」をONにすると、選択コマ内の画像だけを動かせます。</p>
       </section>
     </aside>
   </main>
 
-  <footer>v0.3 — 8点ハンドル / スマートスナップ / コマ間0mm・標準余白 / 参照画像レイヤー / SVG・JSON保存</footer>
+  <footer>v1.0 — 複数ページ / コマ内JPG・PNG / IndexedDB永続保存 / 画像位置・拡大 / SVG・PNG・JPG書出 / v0.3互換読込</footer>
   <script src="app.js"></script>
 </body>
 </html>
