@@ -82,7 +82,6 @@ function installMasterAwareImport() {
   const oldButton = $('applyAiStoryboardBtn');
   if (!oldButton) return;
 
-  // Replace the v0.5 button node so its old single-page-only click handler is removed.
   const button = oldButton.cloneNode(true);
   oldButton.replaceWith(button);
 
@@ -110,6 +109,23 @@ function installMasterAwareImport() {
   });
 }
 
+async function preloadEpisode0Master() {
+  const status = $('aiStoryboardStatus');
+  try {
+    const response = await fetch('episode0_master.json', { cache: 'no-store' });
+    if (!response.ok) throw new Error(`MASTER取得失敗 (${response.status})`);
+    const master = await response.json();
+    const entries = masterEntriesFrom(master);
+    if (!entries.length) throw new Error('MASTER内にページがありません');
+    $('aiStoryboardJson').value = JSON.stringify(master, null, 2);
+    populateMasterPages(entries);
+    loadMasterPageAt(0);
+    status.textContent = `第0話MASTERを自動読込しました。全${entries.length}ページ。P1を表示しています。`;
+  } catch (error) {
+    if (status) status.textContent = `自動読込エラー：${error.message}`;
+  }
+}
+
 const projectDataV05ForV06 = projectData;
 projectData = function projectDataV06() {
   const data = projectDataV05ForV06();
@@ -121,7 +137,8 @@ document.title = 'Manga Panel Designer v0.6';
 const versionLabelV06 = document.querySelector('h1 span');
 if (versionLabelV06) versionLabelV06.textContent = 'v0.6';
 const footerV06 = document.querySelector('footer');
-if (footerV06) footerV06.textContent = 'v0.6 — MASTER JSON全ページ読込 / ページ切替 / v0.5機能維持 / 右綴じ読み順 / SVG・JSON保存';
+if (footerV06) footerV06.textContent = 'v0.6 — 第0話MASTER自動読込 / ページ切替 / v0.5機能維持 / 右綴じ読み順 / SVG・JSON保存';
 
 installMasterAwareImport();
 render();
+preloadEpisode0Master();
