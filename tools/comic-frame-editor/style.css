@@ -18,7 +18,7 @@ h1 span { font-size: 12px; color: #aaa; font-weight: 500; }
 .header-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
 button, .file-label, select, input { font: inherit; }
 button, .file-label {
-  border: 1px solid #aaa; background: #fff; border-radius: 6px; padding: 7px 10px; cursor: pointer;
+  border: 1px solid #aaa; background: #fff; color: #1f1f1f; border-radius: 6px; padding: 7px 10px; cursor: pointer;
 }
 button:hover, .file-label:hover { background: #f5f5f5; }
 button:disabled { opacity: .45; cursor: default; }
